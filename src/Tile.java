@@ -15,6 +15,12 @@ public class Tile {
 		this.y=y;
 		this.c=c;
 	}
+	
+	public Tile(int x, int y, String s) {
+		this.x=x;
+		this.y=y;
+		this.c=s.trim().charAt(0);
+	}
 	/**
 	 * Por enquanto Draw esta so desenhando o char na tela.
 	 * Talvez seja melhor uma implementação que usa uma imagem
@@ -39,6 +45,21 @@ public class Tile {
 		g2.drawString(String.valueOf(c),0,height );
 
 		g2.translate(-(x-1)*width, -(y-1)*height);
+	}
+	
+	public int getX(){
+		
+		return this.x;
+	}
+	
+	public int getY(){
+		
+		return this.y;
+	}
+	
+	public char getC(){
+		
+		return this.c;
 	}
 
 }
