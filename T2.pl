@@ -28,6 +28,7 @@ setlim(Nome,Val):-nb_setval(Nome,Val).
 init():-
     setlim(lim_Y,5),
     setlim(lim_X,5),
+    assert(saida(mapa,1,1)).
     retractall(dependente(_,_,_,_,_)),
     retractall(possivelp(_,_,_)),
     retractall(ouro(_,_)),
@@ -140,6 +141,7 @@ observalocal(estado(X,Y,D,S,V,M,O),estado(X2,Y2,D,S2,V2,M,O)):-
     (inimigoD(X,Y,_),set(mapamental,X,Y,inimigo), S2 is S-50, V2 is V-50,X2=X,Y2=Y,!);
     (teleport(mapa,X,Y), set(mapamental,X,Y,teleport), X2 is X+1, Y2 is Y+1,S2=S,V2=V,!); %%FAZER RANDOMICO
     (powerup(mapa,X,Y), assert(powerup(mapamental,X,Y)),X2=X,Y2=Y,S2=S,V2=V,!);
+    (saida(mapa,X,Y), assert(saida(mapamental,X,Y)),X2=X,Y2=Y,S2=S,V2=V,!);
     (X2=X,Y2=Y,S2=S,V2=V),
     ((set(buraco,X,Y,notp);set(inimigo,X,Y,notp);set(teleport,X,Y,notp));!).
 
