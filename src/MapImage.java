@@ -65,7 +65,7 @@ public class MapImage {
 		}
 	}
 	
-	public BufferedImage getImage(char c){
+	public static BufferedImage getImage(char c){
 		switch(c){
 		case 'n':
 			return norte;

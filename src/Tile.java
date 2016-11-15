@@ -40,10 +40,10 @@ public class Tile {
 		g2.setPaint(Color.BLACK);
 		g2.draw(new Rectangle(width,height));
 		System.out.println("C=<"+c+">");
-		g2.setColor(Color.RED);
-		g2.setFont(new Font("TimesRoman",Font.BOLD,height));
-		g2.drawString(String.valueOf(c),0,height );
-
+//		g2.setColor(Color.RED);
+//		g2.setFont(new Font("TimesRoman",Font.BOLD,height));
+//		g2.drawString(String.valueOf(c),0,height );
+		g2.drawImage(MapImage.getImage(c), 0, 0, width, height, null);
 		g2.translate(-(x-1)*width, -(y-1)*height);
 	}
 	
