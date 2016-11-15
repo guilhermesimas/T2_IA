@@ -11,7 +11,6 @@ public class Mapa extends JComponent{
 	
 	public int limX = 0;
 	public int limY = 0;
-	private ArrayList<Tile> toModify;
 	
 	@Override
 	public void paint(Graphics g) {
@@ -22,24 +21,26 @@ public class Mapa extends JComponent{
 		g2.fill(new Rectangle(0,0,this.getWidth(),this.getHeight()));
 		g2.setPaint(Color.GREEN);
 		g2.draw(new Rectangle(0,0,this.getWidth(),this.getHeight()));
-		if (toModify != null) {
-			for (Tile t : toModify) {
-				t.draw(g, this.getWidth() / limX, this.getHeight() / limY);
-			}
-		}
+//		if (toModify != null) {
+//			for (Tile t : toModify) {
+//				t.draw(g, this.getWidth() / limX, this.getHeight() / limY);
+//			}
+//		}
 		System.out.println("Mapa paint");
 	}
-	@Override
-	public void update(Graphics g){
-		System.out.println("Mapa update");
-		for(Tile t:toModify){
-			t.draw(g, this.getWidth()/limX, this.getHeight()/limY);
-		}
-	}
 
-	public void setToModify(ArrayList<Tile> toModify) {
+	public void update(ArrayList<Tile> toModify) {
 		// TODO Auto-generated method stub
-		this.toModify= toModify;
+		Graphics g = this.getGraphics();
+		if(g==null){
+			System.out.println("Graphics is null");
+			return;
+		}
+		Graphics gnew=g.create(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+//		this.setForeground(Color.RED);
+		for(Tile t:toModify){
+			t.draw(gnew, this.getWidth()/limX, this.getHeight()/limY);
+		}
 	}
 
 }

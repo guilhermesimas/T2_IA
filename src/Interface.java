@@ -46,11 +46,13 @@ public class Interface extends JComponent{
 		this.add(mapaPanel);
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
-		JButton testButton = new JButton("Hello");
+		JButton testButton = new JButton("LOAD MAPA");
 		testButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0){
-				System.out.println("Hello");
+				System.out.println("updateMapa");
+				agenteLogico.updateMapa();
+				testButton.setEnabled(false);
 			}
 		});
 		rightPanel.add(testButton);
