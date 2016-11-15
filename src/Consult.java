@@ -97,7 +97,7 @@ public class Consult {
 		Query q = new Query ("retractall(modified(_,_,_))");
 		Map<String, Term>[] solution = q.allSolutions();
 		
-		Query q1 = new Query ("observalocal("+ E + "), estado(X,Y,D,V,S,M,O))");
+		Query q1 = new Query ("observalocal("+ E + ", estado(X,Y,D,V,S,M,O))");
 		Map<String, Term>[] solution1 = q1.allSolutions();
 		
 		E = new Estado(solution1[solution1.length-1].get("X").intValue(), 
@@ -130,7 +130,7 @@ public class Consult {
 	
 	public String getSugestao(Estado E){
 		
-		Query q = new Query("sugestao("+E+"),R)");
+		Query q = new Query("sugestao("+E+",R)");
 		Map<String, Term>[] solution = q.allSolutions();
 		
 		Term R = solution[solution.length-1].get("R");
@@ -140,9 +140,19 @@ public class Consult {
 		
 	}
 	
+	public void agir(Action a){
+		
+		Query q = new Query("acao("+E+","+ a.name()+", Estado2)");
+		Map<String, Term>[] solution = q.allSolutions();
+		
+		E = new Estado(solution[solution.length-1].toString().trim());
+		
+	}
+	
 	public static Estado getE(){		
 		return E;
-	} 
+	}
+	
 	
 	
 	public static void main(String[]args){

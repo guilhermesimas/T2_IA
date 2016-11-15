@@ -62,7 +62,7 @@ public class Estado {
 	
 	public String toString(){
 		return "estado(" + this.getX() + "," + this.getY() + "," + this.getD() + 
-				"," + this.getS() + "," + this.getV() + "," + this.getM() + "," + this.getO();
+				"," + this.getS() + "," + this.getV() + "," + this.getM() + "," + this.getO() +")";
 	}
 
 }
