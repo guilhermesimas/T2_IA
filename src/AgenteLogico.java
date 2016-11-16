@@ -105,8 +105,33 @@ public class AgenteLogico implements Runnable{
 			if(acao==Action.pegar_ouro || acao==Action.pegar_powerup){
 				acao = Action.pegar_objeto;
 			}
-			else if(acao==Action.astar_safe)
-				acao = Action.virar_a_direita;
+			else if(acao==Action.astar_safe){
+				/*
+				 * Implementar aqui a AStar.
+				 * Ela precisa de uma lista de Nodes
+				 * dos "destinos" dela (ou só um char 
+				 * e ela encontra o resto no mapaMental)
+				 * Ela precisa da matriz do mapa mental e
+				 * ela precisa dos dois limites. Acho que
+				 * passando os limites ela consegue encontrar
+				 */
+				AStar busca = new AStar();
+				busca.setLimX(mapaMental.limX);
+				busca.setLimY(mapaMental.limY);
+				busca.setC('S');
+				busca.setMapa(mapaMentalMatrix);
+				ArrayList<Action> novasAcoes = busca.findPath(atual.getX(), 
+												atual.getY(), 
+												AStar.DtoInt(atual.getD()));
+				if(novasAcoes==null || novasAcoes.isEmpty()){
+					System.out.println("NOVAS ACOES NULL");
+				}
+				for(Action a:novasAcoes){
+					commands.add(a);
+					System.out.println("COMMAND: "+a.name());
+				}
+				acao = Action.valueOf((String)commands.poll());
+			}
 			Consult.agir(acao);
 			if(acao == Action.pegar_objeto){
 				mapaMatrix[oldY-1][oldX-1] = '.';
@@ -125,6 +150,7 @@ public class AgenteLogico implements Runnable{
 			mapaMental.update(toModify);
 			for(Tile t:toModify){
 				System.out.println("toModify:<"+t.getX()+"/"+t.getY()+">:"+t.getC());
+				mapaMentalMatrix[t.getY()-1][t.getX()-1]=t.getC();
 			}
 			
 			try {

@@ -13,30 +13,35 @@ import java.util.ArrayList;
  *
  */
 public class AStar {
+	
+	private int limX;
+	private int limY;
+	private char c;
+	private char mapa[][];
+	
+	
+	private int visitedCost[][][];
 	private ArrayList<Node> safe;
 	private ArrayList<Node> borders;
 	private Node currentBest;
-	private int limX;
-	private int limY;
 	
-	private int visitedCost[][][];
-	private char mapa[][];
 	
-	public ArrayList<Boolean> findPath(int x,int y,int d){
+	public ArrayList<Action> findPath(int x,int y,int d){
 		/*
 		 * visitedCost inicializado como -1 pra saber que
 		 * "não foi visitado ainda"
 		 */
+		setSafe();
+		visitedCost = new int[limY][limX][4];
 		for(int i=0; i<limY;i++){
 			for(int j=0;j<limX;j++){
-				for(int k=0;j<4;k++){
-					visitedCost[j][i][k]=-1;
+				for(int k=0;k<4;k++){
+					visitedCost[i][j][k]=-1;
 				}
 			}
 		}
 		this.borders = new ArrayList<>();
 		borders.add(new Node(x,y,d));
-		boolean found = false;
 		/*
 		 * Loop da busca. A busca deve continuar mesmo depois de
 		 * encontrar um dos destinos, pois pode haver um destino
@@ -63,8 +68,34 @@ public class AStar {
 			}
 			borders.remove(currentBest);
 			expand(currentBest);
+			System.out.println("CurrentBest:"+currentBest.getX()+","+currentBest.getY());
 		}
-		return currentBest.getCommands();
+		return toAction(currentBest.getCommands());
+	}
+	/**
+	 * Roda o mapa passado inteiro e cria uma lista com 
+	 * os Nodes que são destinos
+	 */
+	private void setSafe(){
+		safe = new ArrayList<Node>();
+		for(int i=limY-1;i>=0;i--){
+			for(int j=0;j<limX;j++){
+				if(mapa[i][j]==c){
+					safe.add(new Node(j+1,i+1,0));
+				}
+			}
+		}
+	}
+	private ArrayList<Action> toAction(ArrayList<Boolean> commands) {
+		ArrayList<Action> actionList = new ArrayList<>();
+		for(Boolean b:commands){
+			if(b){
+				actionList.add(Action.mover_para_frente);
+			}else{
+				actionList.add(Action.virar_a_direita);
+			}
+		}
+		return actionList;
 	}
 	private void expand(Node n) {
 		// TODO Auto-generated method stub
@@ -131,7 +162,7 @@ public class AStar {
 		if(    c!='.' 
 			&& c!='x' 
 			&& c!='U' 
-			&& c!=mapa[safe.get(0).getY()-1][safe.get(0).getX()-1]){
+			&& c!=this.c){
 			return false;
 		}
 		int currentCost = visitedCost[novo.getY()-1][novo.getX()-1][novo.getD()];
@@ -163,5 +194,37 @@ public class AStar {
 	}
 	private int manhattanDistance(int x, int y, int x2, int y2) {
 		return Math.abs(x-x2)+Math.abs(y-y2);
+	}
+	public void setLimX(int limX2) {
+		// TODO Auto-generated method stub
+		this.limX=limX2;
+		
+	}
+	public void setC(char d) {
+		// TODO Auto-generated method stub
+		this.c=d;
+		
+	}
+	public void setMapa(char[][] mapaMentalMatrix) {
+		// TODO Auto-generated method stub
+		this.mapa=mapaMentalMatrix;
+	}
+	public void setLimY(int limY2) {
+		// TODO Auto-generated method stub
+		this.limY=limY2;
+	}
+	public static int DtoInt(String d) {
+		// TODO Auto-generated method stub
+		switch (d.trim()){
+		case "norte":
+			return 0;
+		case "leste":
+			return 1;
+		case "sul":
+			return 2;
+		case "oeste":
+			return 3;
+		}
+		return -1;
 	}
 }
