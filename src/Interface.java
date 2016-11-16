@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,12 +39,21 @@ public class Interface extends JComponent{
 		 * quando dou resize
 		 */
 		JPanel mapaPanel = new JPanel();
-		mapaPanel.setPreferredSize(new Dimension(Main.FRAME_WIDTH/2,Main.FRAME_HEIGHT));
-		mapaPanel.setLayout(new BoxLayout(mapaPanel,BoxLayout.Y_AXIS));
+		JPanel mapaMentalPanel = new JPanel();
+		mapaPanel.setPreferredSize(new Dimension(Main.FRAME_WIDTH/2,Main.FRAME_HEIGHT/2));
+		mapa.setPreferredSize(new Dimension(Main.FRAME_WIDTH/2,Main.FRAME_HEIGHT/2));
+		mapaMental.setPreferredSize(new Dimension(Main.FRAME_WIDTH/2,Main.FRAME_HEIGHT/2));
+		mapaPanel.setLayout(new GridLayout(1,1));
+		mapaMentalPanel.setLayout(new GridLayout(1,1));
+		
+		mapaMentalPanel.add(mapaMental);
 		mapaPanel.add(mapa);
-		mapaPanel.add(mapaMental);
+		
+		
 		
 		this.add(mapaPanel);
+		this.add(mapaMentalPanel);
+		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
 		JButton testButton = new JButton("LOAD MAPA");
@@ -55,7 +65,18 @@ public class Interface extends JComponent{
 				testButton.setEnabled(false);
 			}
 		});
+		JButton runButton=new JButton("GO");
+		runButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				System.out.println("Vish");
+				Thread t1 = new Thread(agenteLogico);
+				t1.start();
+				runButton.setEnabled(false);
+			}
+		});
 		rightPanel.add(testButton);
+		rightPanel.add(runButton);
 		
 		this.add(rightPanel,BorderLayout.EAST);
 		

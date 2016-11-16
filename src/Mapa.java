@@ -15,7 +15,7 @@ public class Mapa extends JComponent{
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		this.setPreferredSize(new Dimension(this.getParent().getWidth(),this.getParent().getHeight()/2));
+//		this.setPreferredSize(new Dimension(this.getParent().getWidth(),this.getParent().getHeight()/2));
 		System.out.println(this.getHeight());
 		g2.setPaint(Color.BLACK);
 		g2.fill(new Rectangle(0,0,this.getWidth(),this.getHeight()));

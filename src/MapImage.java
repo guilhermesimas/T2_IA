@@ -5,14 +5,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Essa classe ai carregar todas as imagens pro Tile e vai guardar elas
- * como BufferedImages em variaveis staticas. O Static initialization
- * block dela vai carregar tudo a partir das files .png e ela vai ter
- * um metodo que passa a imagem em função de um char passado, pra 
- * facilitar pro Tile, que nao vai ter que ter esse switch case.
- * Cima Baixo Direita Esquerda. Seila, qualquer coisa. É questao
- * de documentação só. Poderia fazer um enum tambem e resolve. Inimigo,
- * Duvida, etc.
+ * Essa classe ai carregar todas as imagens pro Tile e vai guardar elas como
+ * BufferedImages em variaveis staticas. O Static initialization block dela vai
+ * carregar tudo a partir das files .png e ela vai ter um metodo que passa a
+ * imagem em função de um char passado, pra facilitar pro Tile, que nao vai ter
+ * que ter esse switch case. Cima Baixo Direita Esquerda. Seila, qualquer coisa.
+ * É questao de documentação só. Poderia fazer um enum tambem e resolve.
+ * Inimigo, Duvida, etc.
+ * 
  * @author Guilherme Simas
  *
  */
@@ -29,8 +29,9 @@ public class MapImage {
 	public static BufferedImage powerup;
 	public static BufferedImage saida;
 	public static BufferedImage nothing;
-	public static BufferedImage duvida;	
-	
+	public static BufferedImage duvida;
+	public static BufferedImage safe;
+
 	private static final String norteFile = "norteFile.png";
 	private static final String sulFile = "sulFile.png";
 	private static final String lesteFile = "lesteFile.png";
@@ -44,7 +45,8 @@ public class MapImage {
 	private static final String saidaFile = "saidaFile.png";
 	private static final String nothingFile = "nothingFile.png";
 	private static final String duvidaFile = "duvidaFile.png";
-	
+	private static final String safeFile = "safeFile.png";
+
 	static {
 		try {
 			norte = ImageIO.read(new File(norteFile));
@@ -60,13 +62,14 @@ public class MapImage {
 			saida = ImageIO.read(new File(saidaFile));
 			nothing = ImageIO.read(new File(nothingFile));
 			duvida = ImageIO.read(new File(duvidaFile));
+			safe = ImageIO.read(new File(safeFile));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static BufferedImage getImage(char c){
-		switch(c){
+
+	public static BufferedImage getImage(char c) {
+		switch (c) {
 		case 'n':
 			return norte;
 		case 's':
@@ -93,9 +96,11 @@ public class MapImage {
 			return nothing;
 		case '?':
 			return duvida;
+		case 'S':
+			return safe;
 		default:
-			return ouro;			
+			return duvida;
 		}
 	}
-	
+
 }

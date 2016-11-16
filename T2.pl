@@ -1,12 +1,12 @@
 
-
+:- dynamic (lim/2).
 :- dynamic (ouro/2).
 :- dynamic (powerup/3).
 
 :- dynamic (buraco/3).
 :- dynamic (inimigo/3).
-:- dynamic (inimigod/4).
-:- dynamic (inimigoD/4).
+:- dynamic (inimigod/3).
+:- dynamic (inimigoD/3).
 :- dynamic (teleport/3).
 :- dynamic (saida/3).
 
@@ -23,13 +23,12 @@
 :- discontiguous set/3.
 
 
-setlim(Nome,Val):-nb_setval(Nome,Val).
+%setlim(Nome,Val):-nb_setval(Nome,Val).
 
 init():-
-    setlim(lim_Y,5),
-    setlim(lim_X,5),
-    assert(saida(mapa,1,1)).
-    retractall(dependente(_,_,_,_,_)),
+ %   setlim(lim_Y,12),
+  %  setlim(lim_X,12),
+    assert(saida(mapa,1,1)),
     retractall(possivelp(_,_,_)),
     retractall(ouro(_,_)),
     retractall(powerup(_,_,_)),
@@ -51,9 +50,9 @@ setmapa():- assert(ouro(4,3)).
 
 adiciona(X,L,[X|L]).
 
-adj(X,Y,norte,X,Y2):- nb_getval(lim_Y,LIM), Y<LIM, Y2 is Y+1.
+adj(X,Y,norte,X,Y2):- lim(_,LIM), Y<LIM, Y2 is Y+1.
 adj(X,Y,sul,X,Y2):- Y>1, Y2 is Y-1.
-adj(X,Y,leste,X2,Y):- nb_getval(lim_X,LIM), X<LIM, X2 is X+1.
+adj(X,Y,leste,X2,Y):- lim(LIM,_), X<LIM, X2 is X+1.
 adj(X,Y,oeste,X2,Y):- X>1, X2 is X-1.
 
 set(mapa,X,Y,buraco):- assert(buraco(mapa,X,Y)).
