@@ -33,6 +33,16 @@ public class Node {
 			this.commands.add(b);
 		}
 	}
+	
+	public boolean isSafe(ArrayList<Node> safe){	
+		for(Node s: safe){
+			if(this.getX() == s.getX() && this.getY() == s.getY()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public ArrayList<Boolean> getCommands() {
 		// TODO Auto-generated method stub
 		return this.commands;

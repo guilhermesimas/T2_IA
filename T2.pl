@@ -175,6 +175,13 @@ checkperigo(Nome,X,Y):- % se houver apenas um possivel perigo, marca como perigo
     adj(X,Y,_,X2,Y2),
     possivelp(Nome,X2,Y2),
     set(mapamental,X2,Y2,Nome).
+    
+procurap(buraco):-
+    possivelp(buraco,X,Y),
+    not(buraco(mapamental,X,Y)),
+    adj(X,Y,_,X2,Y2),
+    sentirbrisa(mapa,X2,Y2),
+    checkperigo(buraco,X2,Y2).
 
 %----------------------------------AÃ‡Ã•ES------------------------------------------%
 
@@ -183,6 +190,7 @@ acao(estado(X,Y,D,S,V,M,O), mover_para_frente, Estado2):- mover(X,Y,D,X2,Y2), S2
 acao(estado(X,Y,D,S,V,M,O), virar_a_direita, Estado2):- virar(D,D2), S2 is S-1, Estado2 = estado(X,Y,D2,S2,V,M,O) , !.
 acao(estado(X,Y,D,S,V,M,O), pegar_objeto, Estado2):- pegar_objeto(X,Y,V,O,S,V2,O2,S2), S3 is S2-1, Estado2 = estado(X,Y,D,S3,V2,M,O2) , !.
 acao(estado(X,Y,D,S,V,M,O), atirar, Estado2):- atirar(X,Y,D,M,M2), S2 is S-10, Estado2 = estado(X,Y,D,S2,V,M2,O) , !.
+acao(estado(X,Y,D,S,V,M,O), procurar_perigo, Estado2):- procurap(buraco), Estado2 = estado(X,Y,D,S,V,M,O), !.
 
 mover(X,Y,D,X2,Y2):-adj(X,Y,D,X2,Y2).
 
@@ -267,4 +275,11 @@ sugestao(estado(X,Y,_,_,_,_,_),R):-
 sugestao(estado(_,_,_,_,_,_,_),R):-
     safe(X,Y),
     not(visitado(X,Y)),
-    R=astar_safe,!. 
+    R=astar_safe,!.
+    
+sugestao(estado(_,_,_,_,_,_,_),R):-
+    possivelp(_,X,Y),
+    not(buraco(mapamental,X,Y)),
+    not(inimigo(mapamental,X,Y)),
+    not(teleport(mapamental,X,Y)),
+    R=procurar_perigo,!.

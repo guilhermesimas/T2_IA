@@ -34,7 +34,7 @@ public class Tile {
 			break;
 			
 		case "teleport":
-			this.c = 'D';
+			this.c = 't';
 			break;
 			
 		case "possivelburaco": case "possivelinimigo": case"possivelteleport":
@@ -79,8 +79,8 @@ public class Tile {
 		g2.translate((x-1)*width, (Tile.limY-y)*height);
 		g2.setPaint(Color.WHITE);
 		g2.fill(new Rectangle(width,height));
-		g2.setPaint(Color.BLACK);
-		g2.draw(new Rectangle(width,height));
+//		g2.setPaint(Color.BLACK);
+//		g2.draw(new Rectangle(width,height));
 //		System.out.println("C=<"+c+">");
 //		g2.setColor(Color.RED);
 //		g2.setFont(new Font("TimesRoman",Font.BOLD,height));

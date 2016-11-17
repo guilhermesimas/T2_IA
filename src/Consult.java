@@ -35,10 +35,10 @@ public class Consult {
 		switch (c){
 		
 		case'D':
-			s= "inimigoD("+X+","+Y+"100)";
+			s= "inimigoD("+X+","+Y+",100)";
 			break;
 		case 'd':
-			s= "inimigod("+X+","+Y+"100)";
+			s= "inimigod("+X+","+Y+",100)";
 			break;
 		case 'T':
 			s= "teleport(mapa,"+X+","+Y+")";
@@ -52,8 +52,12 @@ public class Consult {
 		case 'U':
 			s= "powerup(mapa,"+X+","+Y+")";
 			break;
+		case 'x':
+			s = "saida(mapa,"+X+","+Y+")";
+		break;
 		case '.':
 			return;
+			
 		}
 		q = new Query("assert("+s+")");
 		q.allSolutions();
@@ -79,7 +83,7 @@ public class Consult {
 					  
 					  if(tile.getX() == t.getX() && tile.getY() == t.getY()){
 						 contains = true;
-						 System.out.println("TRUE");
+//						 System.out.println("TRUE");
 					  }
 					  
 				  }
@@ -165,7 +169,7 @@ public class Consult {
 	}
 	
 	
-	public static String getSugestao(){
+	public static Action getSugestao(){
 		
 		Query q = new Query("sugestao("+E+",R)");
 		Map<String, Term>[] solution = q.allSolutions();
@@ -173,11 +177,11 @@ public class Consult {
 		Term R = solution[solution.length-1].get("R");
 		System.out.println("Sugestao: " + R );		
 		
-		return R.toString();
+		return new Action(R.toString());
 		
 	}
 	
-	public static String getSugestao(Estado E){
+	public static Action getSugestao(Estado E){
 		
 		Consult.E = E;
 		
@@ -187,10 +191,38 @@ public class Consult {
 	
 	public static void agir(Action a){
 		
-		Query q = new Query("acao("+E+","+ a.name()+", Estado2)");
-		Map<String, Term>[] solution = q.allSolutions();
+		Query q;
+		Map<String, Term>[] solution;
+		if(a.getAction() == ActionEnum.procurar_perigo){
+			
+			q = new Query("procurap(buraco)");
+			solution = q.allSolutions();
+			System.out.println("consult1 " + (q.hasSolution() ? "succeeded" : "failed"));
+			
+//			q = new Query("acao("+E+","+ a.getAction().name()+", Estado2)");
+//			solution = q.allSolutions();
+			
+		Query q1 = new Query("notp(buraco,12,2)");
+		System.out.println("consult1 " + (q1.hasSolution() ? "succeeded" : "failed"));
 		
-		E = new Estado(solution[solution.length-1].get("Estado2").toString().trim());
+		q1 = new Query("notp(inimigo,12,2)");
+		System.out.println("consult2 " + (q1.hasSolution() ? "succeeded" : "failed"));
+		
+		q1 = new Query("notp(teleport,12,2)");
+		System.out.println("consult3 " + (q1.hasSolution() ? "succeeded" : "failed"));
+		
+		q1 = new Query("safe(12,2)");
+		System.out.println("consult " + (q1.hasSolution() ? "succeeded" : "failed"));
+		
+		
+		}
+		else{
+			q = new Query("acao("+E+","+ a.getAction().name()+", Estado2)");
+			solution = q.allSolutions();
+			E = new Estado(solution[solution.length-1].get("Estado2").toString().trim());
+		}
+		
+		
 		
 	}
 	

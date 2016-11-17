@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
+import javax.swing.JLabel;
+
 public class AgenteLogico implements Runnable{
 	Mapa mapa = null;
 	Mapa mapaMental = null;
@@ -12,6 +14,7 @@ public class AgenteLogico implements Runnable{
 	char mapaMentalMatrix[][];
 	private ArrayList<Tile> toModify;
 	private int refreshRate = 1000;
+	private JLabel label;
 	
 	private static final String PROLOG_FILE = "T2.pl";
 	private static final String MAP_FILE = "IA_2016.2_mapa.txt";
@@ -69,7 +72,10 @@ public class AgenteLogico implements Runnable{
 				mapaMentalMatrix[i][j]='X';
 				this.toModify.add(new Tile(j+1,mapa.limY-(i),mapaMatrix[i][j]));
 			}
+	
 		}
+		
+		mapaMentalMatrix[mapa.limY-1][0]='x';
 		
 		
 		
@@ -84,13 +90,23 @@ public class AgenteLogico implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		//inicializa o consult.
-		Queue commands = new LinkedList<Action>();
+		Queue<Action> commands = new LinkedList<Action>();
 		/*
 		 * A principio ele roda para sempre, darei um break quando a soluçao
 		 * for "sair" ou algo do tipo. Ir para a saida, etc.
 		 */
 		while(true){
 			ArrayList<Tile> toModify = Consult.observa();
+			
+			mapaMental.update(toModify);
+			for(Tile t:toModify){
+				System.out.println("toModify:<"+t.getX()+"/"+t.getY()+">:"+t.getC());
+				mapaMentalMatrix[t.getY()-1][t.getX()-1]=t.getC();
+				if(t.getX()==1 && t.getY()==1){
+					mapaMentalMatrix[0][0]='x';
+				}
+			}
+			
 			if(commands.isEmpty()){
 				commands.add(Consult.getSugestao());
 			}
@@ -98,14 +114,17 @@ public class AgenteLogico implements Runnable{
 			 * Pegar estado atual para apagar no mapa e pegar estado novo para desenhar no mapa.
 			 */
 			Estado atual = Consult.getE();
+			updateLabel(atual);
 			int oldX = atual.getX();
 			int oldY = atual.getY();
-			char oldC = mapaMatrix[oldY-1][oldX-1];
-			Action acao = Action.valueOf((String) commands.poll());
-			if(acao==Action.pegar_ouro || acao==Action.pegar_powerup){
-				acao = Action.pegar_objeto;
+			char oldC = mapaMatrix[mapa.limY-oldY][oldX-1];
+			Action acao = commands.poll();
+			if(acao.getAction()==ActionEnum.pegar_ouro || acao.getAction()==ActionEnum.pegar_powerup){
+				acao = new Action(ActionEnum.pegar_objeto);
+			}else if(acao.getAction()==ActionEnum.sair){
+				return;
 			}
-			else if(acao==Action.astar_safe){
+			else if(acao.getAction()==ActionEnum.astar_safe){
 				/*
 				 * Implementar aqui a AStar.
 				 * Ela precisa de uma lista de Nodes
@@ -115,6 +134,13 @@ public class AgenteLogico implements Runnable{
 				 * ela precisa dos dois limites. Acho que
 				 * passando os limites ela consegue encontrar
 				 */
+				
+				for(int i=0;i<12;i++){
+					for(int j=0;j<12;j++){
+						System.out.print(mapaMentalMatrix[i][j]);
+					}
+					System.out.println();
+				}
 				AStar busca = new AStar();
 				busca.setLimX(mapaMental.limX);
 				busca.setLimY(mapaMental.limY);
@@ -128,13 +154,40 @@ public class AgenteLogico implements Runnable{
 				}
 				for(Action a:novasAcoes){
 					commands.add(a);
-					System.out.println("COMMAND: "+a.name());
+					System.out.println("COMMAND: "+a.getAction().name());
 				}
-				acao = Action.valueOf((String)commands.poll());
+				acao = commands.poll();
+			}else if(acao.getAction()==ActionEnum.astar_saida){
+				
+//				for(int i=0;i<12;i++){
+//					for(int j=0;j<12;j++){
+//						System.out.print(mapaMentalMatrix[i][j]);
+//					}
+//					System.out.println();
+//				}
+				AStar busca = new AStar();
+				busca.setLimX(mapaMental.limX);
+				busca.setLimY(mapaMental.limY);
+				busca.setC('x');
+				busca.setMapa(mapaMentalMatrix);
+				ArrayList<Action> novasAcoes = busca.findPath(atual.getX(), 
+												atual.getY(), 
+												AStar.DtoInt(atual.getD()));
+				if(novasAcoes==null || novasAcoes.isEmpty()){
+					System.out.println("NOVAS ACOES NULL");
+				}
+				for(Action a:novasAcoes){
+					commands.add(a);
+					System.out.println("COMMAND: "+a.getAction().name());
+				}
+				acao = commands.poll();
+			}
+			if(acao.getAction() == ActionEnum.procurar_perigo){
+				System.out.println("PROCURA SAPORRA");
 			}
 			Consult.agir(acao);
-			if(acao == Action.pegar_objeto){
-				mapaMatrix[oldY-1][oldX-1] = '.';
+			if(acao.getAction() == ActionEnum.pegar_objeto){
+				mapaMatrix[mapa.limY-oldY][oldX-1] = '.';
 				oldC = '.';
 			}
 			Estado novo = Consult.getE();			
@@ -147,11 +200,6 @@ public class AgenteLogico implements Runnable{
 			mapaUpdate.add(next);
 			
 			mapa.update(mapaUpdate);
-			mapaMental.update(toModify);
-			for(Tile t:toModify){
-				System.out.println("toModify:<"+t.getX()+"/"+t.getY()+">:"+t.getC());
-				mapaMentalMatrix[t.getY()-1][t.getX()-1]=t.getC();
-			}
 			
 			try {
 				Thread.sleep(refreshRate);
@@ -160,6 +208,14 @@ public class AgenteLogico implements Runnable{
 				e.printStackTrace();
 			}
 		}
+		
+	}
+	private void updateLabel(Estado e) {
+		this.label.setText("SCORE:"+e.getS()+" HEALTH:"+e.getV()+" OURO:"+e.getO()+" MUNICAO:"+e.getM());
+		
+	}
+	public void setLabel(JLabel estadoValores) {
+		this.label= estadoValores;
 		
 	}
 

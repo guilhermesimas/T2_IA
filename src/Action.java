@@ -1,11 +1,17 @@
 
-public enum Action {
-	sair,
-	astar_saida,
-	pegar_ouro,
-	pegar_powerup,
-	mover_para_frente,
-	virar_a_direita,
-	astar_safe,
-	pegar_objeto
+public class Action {
+	private ActionEnum action;
+	public Action(ActionEnum a){
+		this.action=a;
+	}
+	public Action(String string) {
+		// TODO Auto-generated constructor stub
+		this.action=ActionEnum.valueOf(string);
+	}
+	public void setActionEnum(ActionEnum a){
+		this.action=a;
+	}
+	public ActionEnum getAction(){
+		return this.action;
+	}
 }

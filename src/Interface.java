@@ -11,11 +11,18 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Interface extends JComponent{
 	
 	private AgenteLogico agenteLogico;
+	private static final int MIN_PASSOS_POR_SEG = 1;
+	private static final int MAX_PASSOS_POR_SEG = 20;
+	private static final int INIT_PASSOS_POR_SEG = 1;
 	
 	public Interface(){
 		super();
@@ -75,6 +82,26 @@ public class Interface extends JComponent{
 				runButton.setEnabled(false);
 			}
 		});
+		JSlider passosPorSegundoSlider = new JSlider(JSlider.HORIZONTAL,MIN_PASSOS_POR_SEG,MAX_PASSOS_POR_SEG,INIT_PASSOS_POR_SEG);
+		passosPorSegundoSlider.setMajorTickSpacing(2);
+		passosPorSegundoSlider.setMinorTickSpacing(1);
+		passosPorSegundoSlider.setPaintTicks(true);
+		passosPorSegundoSlider.setPaintLabels(true);
+		passosPorSegundoSlider.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if(!passosPorSegundoSlider.getValueIsAdjusting()){
+					agenteLogico.setRefreshRate(1000/passosPorSegundoSlider.getValue());
+				}
+			}
+			
+		});
+		JLabel estadoValores = new JLabel();
+		estadoValores.setMinimumSize(new Dimension((Main.FRAME_WIDTH/4)+10,20));
+		estadoValores.setMaximumSize(new Dimension((Main.FRAME_WIDTH/4)+10,20));
+		estadoValores.setPreferredSize(new Dimension((Main.FRAME_WIDTH/4)+10,20));
+		rightPanel.add(estadoValores);
+		rightPanel.add(passosPorSegundoSlider);
 		rightPanel.add(testButton);
 		rightPanel.add(runButton);
 		
@@ -83,6 +110,7 @@ public class Interface extends JComponent{
 		this.agenteLogico = new AgenteLogico();
 		agenteLogico.setMapa(mapa);
 		agenteLogico.setMapaMental(mapaMental);
+		agenteLogico.setLabel(estadoValores);
 		agenteLogico.init();
 		
 		

@@ -25,7 +25,9 @@ public class AStar {
 	private ArrayList<Node> borders;
 	private Node currentBest;
 	
-	
+	/*
+	 * CHecar se so tem 1 border e se ela é safe
+	 */
 	public ArrayList<Action> findPath(int x,int y,int d){
 		/*
 		 * visitedCost inicializado como -1 pra saber que
@@ -47,30 +49,49 @@ public class AStar {
 		 * encontrar um dos destinos, pois pode haver um destino
 		 * "mais barato" ainda. Deve-se levar isso em consideração.
 		 */
+		
 		while(!borders.isEmpty()){ 
+			
 			currentBest=borders.get(0);
-			int minCost = borders.get(0).getCost()+calc_heuristica(currentBest.getX(),
-																	currentBest.getY());
+			int minCost = currentBest.getCost()+calc_heuristica(currentBest.getX(),
+																currentBest.getY());
+			
 			/*
 			 * Se o currentBest for um safe então eu não quero expandir ele, pois se ele
 			 * fosse realmente o melhor ele já seria o currentBest, e nenhuma outra fronteira
 			 * irá gerar um Node melhor. Do contrário, o currentBest será esse novo melhor.
 			 * Portanto eu só preciso não expandir o currentBest caso ele seja de fato o melhor.
 			 */
+			
+			System.out.println("X = " + borders.get(0).getX() + " Y = " + borders.get(0).getY());
+			
+			
 			for(Node n:borders){
 				/*
 				 * Encontra o novo currentBest
 				 */
+				System.out.println("borders");
+				
+				System.out.println("Node X= " + n.getX() + " Y= " + n.getY() + "Custo: " + (n.getCost()+calc_heuristica(n.getX(),n.getY())));
+				
 				if(n.getCost()+calc_heuristica(n.getX(),n.getY())<minCost){
 					minCost = n.getCost()+calc_heuristica(n.getX(),n.getY());
 					currentBest = n;
 				}
+				
+				System.out.println("custo mínimo: " + minCost);
+			}
+			if(currentBest.isSafe(safe)){
+				return toAction(currentBest.getCommands());
 			}
 			borders.remove(currentBest);
 			expand(currentBest);
+			
+			
 			System.out.println("CurrentBest:"+currentBest.getX()+","+currentBest.getY());
 		}
-		return toAction(currentBest.getCommands());
+		//return toAction(currentBest.getCommands());
+		return null;
 	}
 	/**
 	 * Roda o mapa passado inteiro e cria uma lista com 
@@ -81,29 +102,36 @@ public class AStar {
 		for(int i=limY-1;i>=0;i--){
 			for(int j=0;j<limX;j++){
 				if(mapa[i][j]==c){
+					System.out.println("adding: X = "+ (j+1) +"Y = " + (i+1));
 					safe.add(new Node(j+1,i+1,0));
 				}
 			}
 		}
 	}
+	
+	
 	private ArrayList<Action> toAction(ArrayList<Boolean> commands) {
 		ArrayList<Action> actionList = new ArrayList<>();
 		for(Boolean b:commands){
 			if(b){
-				actionList.add(Action.mover_para_frente);
+				actionList.add(new Action(ActionEnum.mover_para_frente));
 			}else{
-				actionList.add(Action.virar_a_direita);
+				actionList.add(new Action(ActionEnum.virar_a_direita));
 			}
 		}
 		return actionList;
 	}
 	private void expand(Node n) {
 		// TODO Auto-generated method stub
+		
 		Node anda = anda(n);
 		if(isValid(anda)){
 			borders.add(anda);
 		}
 		Node vira = vira(n);
+		if(isValid(vira)){
+			borders.add(vira);
+		}
 		
 	}
 	private Node vira(Node n) {
@@ -171,6 +199,7 @@ public class AStar {
 		}else if(novo.getCost()>=currentCost){
 			return false;
 		}
+		visitedCost[novo.getY()-1][novo.getX()-1][novo.getD()] = novo.getCost();
 		return true;
 	}
 	/**
