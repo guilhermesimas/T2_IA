@@ -34,7 +34,7 @@ public class Tile {
 			break;
 			
 		case "teleport":
-			this.c = 't';
+			this.c = 'T';
 			break;
 			
 		case "possivelburaco": case "possivelinimigo": case"possivelteleport":
@@ -43,6 +43,10 @@ public class Tile {
 			
 		case "visitado":
 			this.c = '.';
+			break;
+			
+		case "powerup":
+			this.c = 'U';
 			break;
 			
 		case "norte":
@@ -85,7 +89,7 @@ public class Tile {
 //		g2.setColor(Color.RED);
 //		g2.setFont(new Font("TimesRoman",Font.BOLD,height));
 //		g2.drawString(String.valueOf(c),0,height );
-		g2.drawImage(MapImage.getImage(c), 0, 0, width, height, null);
+		g2.drawImage(MapImageBob.getImage(c), 0, 0, width, height, null);
 		g2.translate(-(x-1)*width, -(Tile.limY-y)*height);
 	}
 	

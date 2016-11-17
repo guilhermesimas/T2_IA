@@ -112,6 +112,8 @@ set(Nome,X,Y,notp):-not(notp(Nome,X,Y)),assert(notp(Nome,X,Y)).
 
 set(X,Y,visitado):-not(visitado(X,Y)),assert(visitado(X,Y)),assert(modified(X,Y,visitado)).
 
+set(Nome,X,Y,powerup):- not(powerup(mapamental,X,Y)),assert(powerup(mapamental,X,Y)),assert(modified(X,Y,powerup)).
+
 %----------------------------------------------------------------------------------
 perigo(X,Y):- buraco(mapamental,X,Y); inimigo(mapamental,X,Y); teleport(mapamental,X,Y).
 safe(X,Y):-notp(buraco,X,Y),notp(inimigo,X,Y),notp(teleport,X,Y).
@@ -139,7 +141,7 @@ observalocal(estado(X,Y,D,S,V,M,O),estado(X2,Y2,D,S2,V2,M,O)):-
     (inimigod(X,Y,_), set(mapamental,X,Y,inimigo), S2 is S-20, V2 is V-20,X2=X,Y2=Y,!);
     (inimigoD(X,Y,_),set(mapamental,X,Y,inimigo), S2 is S-50, V2 is V-50,X2=X,Y2=Y,!);
     (teleport(mapa,X,Y), set(mapamental,X,Y,teleport), X2 is X+1, Y2 is Y+1,S2=S,V2=V,!); %%FAZER RANDOMICO
-    (powerup(mapa,X,Y), assert(powerup(mapamental,X,Y)),X2=X,Y2=Y,S2=S,V2=V,!);
+    (powerup(mapa,X,Y), set(mapamental,X,Y,powerup),X2=X,Y2=Y,S2=S,V2=V,!);
     (saida(mapa,X,Y), assert(saida(mapamental,X,Y)),X2=X,Y2=Y,S2=S,V2=V,!);
     (X2=X,Y2=Y,S2=S,V2=V),
     ((set(buraco,X,Y,notp);set(inimigo,X,Y,notp);set(teleport,X,Y,notp));!).
@@ -162,16 +164,25 @@ updateMemP(X,Y,Nome):- % marca as adjacencias que nao foram visitadas ou nao sao
     not(notp(Nome,X2,Y2)),
     set(Nome,X2,Y2,possivelp).
 
-countp(Nome,X,Y,C4):- % conta as adjacencias que sao possiveis perigos (ps, nao cosnegui pensar um jeito inteligente de implementar, fiz do burro)
+countp(Nome,X,Y,C4):-
     C is 0, 
     (((adj(X,Y,norte,X2,Y2),possivelp(Nome,X2,Y2)),C1 is C+1,!); C1=C),
     (((adj(X,Y,sul,X3,Y3),possivelp(Nome,X3,Y3)),C2 is C1+1,!); C2=C1),
     (((adj(X,Y,leste,X4,Y4),possivelp(Nome,X4,Y4)),C3 is C2+1,!); C3=C2),
     (((adj(X,Y,oeste,X5,Y5),possivelp(Nome,X5,Y5)),C4 is C3+1,!); C4=C3).
+	
+countnp(Nome,X,Y,C4):- 
+    C is 0, 
+    (((adj(X,Y,norte,X2,Y2),notp(Nome,X2,Y2)),C1 is C+1,!); C1=C),
+    (((adj(X,Y,sul,X3,Y3),notp(Nome,X3,Y3)),C2 is C1+1,!); C2=C1),
+    (((adj(X,Y,leste,X4,Y4),notp(Nome,X4,Y4)),C3 is C2+1,!); C3=C2),
+    (((adj(X,Y,oeste,X5,Y5),notp(Nome,X5,Y5)),C4 is C3+1,!); C4=C3).
 
 checkperigo(Nome,X,Y):- % se houver apenas um possivel perigo, marca como perigo
     countp(Nome,X,Y,C),
     C = 1,
+    countnp(Nome,X,Y,C1),
+    C1 = 3,
     adj(X,Y,_,X2,Y2),
     possivelp(Nome,X2,Y2),
     set(mapamental,X2,Y2,Nome).

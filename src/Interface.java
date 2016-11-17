@@ -97,9 +97,9 @@ public class Interface extends JComponent{
 			
 		});
 		JLabel estadoValores = new JLabel();
-		estadoValores.setMinimumSize(new Dimension((Main.FRAME_WIDTH/4)+10,20));
-		estadoValores.setMaximumSize(new Dimension((Main.FRAME_WIDTH/4)+10,20));
-		estadoValores.setPreferredSize(new Dimension((Main.FRAME_WIDTH/4)+10,20));
+		estadoValores.setMinimumSize(new Dimension((Main.FRAME_WIDTH/4)+50,20));
+		estadoValores.setMaximumSize(new Dimension((Main.FRAME_WIDTH/4)+50,20));
+		estadoValores.setPreferredSize(new Dimension((Main.FRAME_WIDTH/4)+50,20));
 		rightPanel.add(estadoValores);
 		rightPanel.add(passosPorSegundoSlider);
 		rightPanel.add(testButton);

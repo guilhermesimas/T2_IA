@@ -195,7 +195,7 @@ public class Consult {
 		Map<String, Term>[] solution;
 		if(a.getAction() == ActionEnum.procurar_perigo){
 			
-			q = new Query("procurap(buraco)");
+			q = new Query("procurap(buraco);procurap(inimigo);procurap(teleport)");
 			solution = q.allSolutions();
 			System.out.println("consult1 " + (q.hasSolution() ? "succeeded" : "failed"));
 			

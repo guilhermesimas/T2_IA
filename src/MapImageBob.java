@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
  * @author Guilherme Simas
  *
  */
-public class MapImage {
+public class MapImageBob {
 	public static BufferedImage norte;
 	public static BufferedImage sul;
 	public static BufferedImage leste;
@@ -32,16 +32,16 @@ public class MapImage {
 	public static BufferedImage duvida;
 	public static BufferedImage safe;
 
-	private static final String norteFile = "norteFile.png";
-	private static final String sulFile = "sulFile.png";
-	private static final String lesteFile = "lesteFile.png";
-	private static final String oesteFile = "oesteFile.png";
-	private static final String buracoFile = "buracoFile.png";
-	private static final String teleporteFile = "teleportFile.png";
-	private static final String inimigoWeakFile = "inimigoWeakFile.png";
-	private static final String inimigoStrongFile = "inimigoStrongFile.png";
-	private static final String ouroFile = "ouroFile.png";
-	private static final String powerupFile = "powerupFile.png";
+	private static final String norteFile = "norteFileBob.png";
+	private static final String sulFile = "sulFileBob.png";
+	private static final String lesteFile = "lesteFileBob.png";
+	private static final String oesteFile = "oesteFileBob.png";
+	private static final String buracoFile = "buracoFileBob.png";
+	private static final String teleporteFile = "teleportFileBob.png";
+	private static final String inimigoWeakFile = "inimigoWeakFileBob.png";
+	private static final String inimigoStrongFile = "inimigoStrongFileBob.png";
+	private static final String ouroFile = "ouroFileBob.png";
+	private static final String powerupFile = "powerupFileBob.png";
 	private static final String saidaFile = "saidaFile.png";
 	private static final String nothingFile = "nothingFile.png";
 	private static final String duvidaFile = "duvidaFile.png";
@@ -99,7 +99,7 @@ public class MapImage {
 		case 'S':
 			return safe;
 		default:
-			return leste;
+			return duvida;
 		}
 	}
 

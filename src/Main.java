@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 
 public class Main {
 
-	public static final int FRAME_HEIGHT = 1000;
-	public static final int FRAME_WIDTH = 1000;
+	public static final int FRAME_HEIGHT = 900;
+	public static final int FRAME_WIDTH = 900;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
