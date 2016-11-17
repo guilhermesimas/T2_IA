@@ -152,11 +152,11 @@ public class Consult {
 		Query q2 = new Query ("observa("+ E.getX() + "," + E.getY() + ")" );
 		Map<String, Term>[] solution2 = q2.allSolutions();
 		
-		Query q3 = new Query ("checkperigo(buraco,"+ E.getX() + "," + E.getY() + ")");
+		Query q3 = new Query ("procurap(buraco)");
 		Map<String, Term>[] solution3 = q3.allSolutions();
-		Query q4 = new Query ("checkperigo(inimigo,"+ E.getX() + "," + E.getY() + ")");
+		Query q4 = new Query ("procurap(inimigo)");
 		Map<String, Term>[] solution4 = q4.allSolutions();
-		Query q5 = new Query ("checkperigo(teleport,"+ E.getX() + "," + E.getY() + ")");
+		Query q5 = new Query ("procurap(teleport)");
 		Map<String, Term>[] solution5 = q5.allSolutions();		
 		
 		return getModified();

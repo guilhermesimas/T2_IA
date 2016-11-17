@@ -182,6 +182,20 @@ procurap(buraco):-
     adj(X,Y,_,X2,Y2),
     sentirbrisa(mapa,X2,Y2),
     checkperigo(buraco,X2,Y2).
+    
+procurap(inimigo):-
+    possivelp(inimigo,X,Y),
+    not(inimigo(mapamental,X,Y)),
+    adj(X,Y,_,X2,Y2),
+    ouvirpassos(X2,Y2),
+    checkperigo(inimigo,X2,Y2).
+    
+procurap(teleport):-
+    possivelp(teleport,X,Y),
+    not(teleport(mapamental,X,Y)),
+    adj(X,Y,_,X2,Y2),
+    verflash(mapa,X2,Y2),
+    checkperigo(teleport,X2,Y2).
 
 %----------------------------------AÃ‡Ã•ES------------------------------------------%
 
